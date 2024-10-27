@@ -3,15 +3,7 @@ import Card from "../components/card";
 import AppH1 from "../components/app-h1";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-type Challenge = {
-  id: number;
-  title: string;
-  difficulty: string;
-  timeLimit: number;
-  description: string;
-  text: string;
-  createdAt: Date;
-};
+import { Challenge } from "@prisma/client";
 
 export default async function ChallengesPage() {
   const session = await auth();
