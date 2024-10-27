@@ -3,14 +3,7 @@ import { cn } from "@/lib/utils";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { Challenge } from "../challenges/page";
-type Mode = {
-  id: number;
-  title: string;
-  approximately: number;
-  description: string;
-  text: string;
-  createdAt: Date;
-};
+
 export default function Card({
   mode,
   challenge,
