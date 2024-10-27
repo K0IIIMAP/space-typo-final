@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import type { Mode } from "@prisma/client";
+import { Mode } from "@prisma/client";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { Challenge } from "../challenges/page";
+import type { Challenge } from "../challenges/page";
 
 export default function Card({
   mode,
