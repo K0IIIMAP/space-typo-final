@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db" // This creates a SQLite database file named dev.db in your project directory
+  url      = "file:./dev.db"
 }
 
 model Mode {

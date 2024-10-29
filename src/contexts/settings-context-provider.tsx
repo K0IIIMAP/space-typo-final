@@ -9,7 +9,7 @@ type TSettingsContext = {
   setTheme: React.Dispatch<React.SetStateAction<string>>;
   setFont: React.Dispatch<React.SetStateAction<string>>;
   setSounds: React.Dispatch<React.SetStateAction<string>>;
-  bodyRef: React.MutableRefObject<HTMLElement>;
+  bodyRef: React.MutableRefObject<HTMLElement | null>; // Update here
 };
 
 // Define the props for the context provider
@@ -29,7 +29,13 @@ export default function SettingsContextProvider({
   const [font, setFont] = useState("courier");
   const [sounds, setSounds] = useState("noSoundpack");
 
-  const bodyRef = useRef(document.body);
+  // Allow bodyRef to start as null and update when document.body is available
+  const bodyRef = useRef<HTMLElement | null>(null);
+
+  // Set bodyRef to document.body once the component mounts
+  useEffect(() => {
+    bodyRef.current = document.body;
+  }, []);
 
   // Load settings from localStorage on mount
   useEffect(() => {

@@ -15,9 +15,9 @@ export default function Demo() {
         <video src="/final clipped demo.mp4" autoPlay loop muted>
           Your browser does not support the video tag.
         </video>
-        <button className="absolute bottom-[10px] flex cursor-pointer items-center py-2 px-3 bg-black/80 animate-scale-pulse">
+        <span className="absolute bottom-[10px] flex cursor-pointer items-center py-2 px-3 bg-black/80 animate-scale-pulse">
           Try out the demo <PlayIcon className="ml-1" />
-        </button>
+        </span>
       </button>
       <DemoDialog dialogIsOpen={dialogIsOpen} />
     </>
