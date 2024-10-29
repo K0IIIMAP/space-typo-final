@@ -1,16 +1,12 @@
 {
   "name": "trainer",
   "version": "0.1.0",
-  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
-  },
-  "prisma": {
-    "seed": "node --loader ts-node/esm prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
