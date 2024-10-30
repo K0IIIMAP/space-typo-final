@@ -14,6 +14,7 @@ export type Challenge = {
 };
 
 export default async function ChallengesPage() {
+  notFound();
   const session = await auth();
   if (!session?.user) {
     redirect("/");

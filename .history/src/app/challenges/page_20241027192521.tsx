@@ -2,7 +2,7 @@ import prisma from "@/lib/db";
 import Card from "../components/card";
 import AppH1 from "../components/app-h1";
 import { auth } from "@/lib/auth";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 export type Challenge = {
   id: number;
   title: string;
