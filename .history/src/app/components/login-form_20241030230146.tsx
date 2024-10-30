@@ -11,7 +11,7 @@ export default function LogInForm({
   loginIsActive,
   setLoginIsActive,
 }: LogInFormProps) {
-  const [, formAction, isPending] = useActionState(logIn, null);
+  const [state, formAction, isPending] = useActionState(logIn);
   return (
     <div
       className={cn(

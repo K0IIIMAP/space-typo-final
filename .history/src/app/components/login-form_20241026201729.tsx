@@ -1,7 +1,7 @@
 import { logIn } from "@/actions/actions";
 import { cn } from "@/lib/utils";
-import React, { Dispatch, SetStateAction, useActionState } from "react";
-
+import React, { Dispatch, SetStateAction } from "react";
+import { useFormState } from "react-dom";
 import AuthBtn from "./sign-up-btn";
 type LogInFormProps = {
   loginIsActive: boolean;
@@ -11,7 +11,7 @@ export default function LogInForm({
   loginIsActive,
   setLoginIsActive,
 }: LogInFormProps) {
-  const [, formAction, isPending] = useActionState(logIn, null);
+  const [logInError, dispatchLogIn] = useFormState(logIn, undefined);
   return (
     <div
       className={cn(
@@ -27,7 +27,7 @@ export default function LogInForm({
       <h2 className="text-white/80 text-2xl font-bold text-center mb-6">
         Login
       </h2>
-      <form className="text-white/80" action={formAction}>
+      <form className="text-white/80" action={dispatchLogIn}>
         <input
           type="email"
           name="email"
@@ -45,8 +45,8 @@ export default function LogInForm({
           maxLength={25}
           minLength={8}
         />
-
-        <AuthBtn type="logIn" isPending={isPending}></AuthBtn>
+        {logInError && <p className="text-red-500">{logInError.message}</p>}
+        <AuthBtn type="logIn"></AuthBtn>
       </form>
       <p className=" pt-20 pb-5 text-center">
         Don&apos;t have an account yet?{" "}

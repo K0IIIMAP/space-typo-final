@@ -11,7 +11,7 @@ export default function LogInForm({
   loginIsActive,
   setLoginIsActive,
 }: LogInFormProps) {
-  const [, formAction, isPending] = useActionState(logIn, null);
+  const [state, formAction, isPending] = useActionState(logIn);
   return (
     <div
       className={cn(
@@ -27,7 +27,7 @@ export default function LogInForm({
       <h2 className="text-white/80 text-2xl font-bold text-center mb-6">
         Login
       </h2>
-      <form className="text-white/80" action={formAction}>
+      <form className="text-white/80" action={dispatchLogIn}>
         <input
           type="email"
           name="email"
@@ -46,7 +46,7 @@ export default function LogInForm({
           minLength={8}
         />
 
-        <AuthBtn type="logIn" isPending={isPending}></AuthBtn>
+        <AuthBtn type="logIn"></AuthBtn>
       </form>
       <p className=" pt-20 pb-5 text-center">
         Don&apos;t have an account yet?{" "}

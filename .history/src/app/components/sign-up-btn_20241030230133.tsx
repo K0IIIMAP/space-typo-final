@@ -9,6 +9,7 @@ export default function AuthBtn({
   isPending,
 }: {
   type: string;
+
   isPending?: boolean;
 }) {
   return (

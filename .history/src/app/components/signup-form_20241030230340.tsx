@@ -5,10 +5,11 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useActionState } from "react";
 import { Dispatch, SetStateAction } from "react";
-
+import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 
 import AuthBtn from "./sign-up-btn";
+import { signIn } from "@/lib/auth";
 
 type SignUpFormProps = {
   loginIsActive: boolean;
@@ -24,7 +25,12 @@ export default function SignUpForm({
     formState: { errors },
   } = useForm({ resolver: zodResolver(SignUpSchema) });
 
-  const [, formAction, isPending] = useActionState(createUser, null);
+  const [createUserError, dispatchCreateUser] = useFormState(
+    createUser,
+
+    undefined
+  );
+  const [state, formAction, isPending] = useActionState(signIn, null);
 
   return (
     <div
@@ -41,7 +47,7 @@ export default function SignUpForm({
       <h2 className="text-white/80 text-2xl font-bold text-center mb-6">
         Sign up
       </h2>
-      <form className="text-white/80" action={formAction}>
+      <form className="text-white/80" action={dispatchCreateUser}>
         <input
           type="email"
           className="w-full p-3  border border-white/80 rounded-md bg-white/0 focus:outline-none focus:scale-[1.01] transition"
@@ -89,6 +95,9 @@ export default function SignUpForm({
           Log In
         </button>
       </p>
+      {createUserError && (
+        <p className="text-red-500">{createUserError.message}</p>
+      )}
     </div>
   );
 }

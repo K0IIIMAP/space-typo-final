@@ -24,7 +24,7 @@ export default function SignUpForm({
     formState: { errors },
   } = useForm({ resolver: zodResolver(SignUpSchema) });
 
-  const [, formAction, isPending] = useActionState(createUser, null);
+  const [formAction, isPending] = useActionState(createUser, null);
 
   return (
     <div

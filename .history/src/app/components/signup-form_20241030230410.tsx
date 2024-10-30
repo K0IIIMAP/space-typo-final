@@ -9,6 +9,7 @@ import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 
 import AuthBtn from "./sign-up-btn";
+import { signIn } from "@/lib/auth";
 
 type SignUpFormProps = {
   loginIsActive: boolean;
@@ -24,7 +25,7 @@ export default function SignUpForm({
     formState: { errors },
   } = useForm({ resolver: zodResolver(SignUpSchema) });
 
-  const [, formAction, isPending] = useActionState(createUser, null);
+  const [state, formAction, isPending] = useActionState(createUser, null);
 
   return (
     <div

@@ -1,16 +1,20 @@
 "use client";
 import React from "react";
 
+import { useFormStatus } from "react-dom";
 import { Button } from "./ui/button";
 
 export default function AuthBtn({
   type,
-
+  disabled,
   isPending,
 }: {
   type: string;
+  disabled?: boolean;
   isPending?: boolean;
 }) {
+  const { pending } = useFormStatus();
+
   return (
     <Button
       disabled={isPending}
