@@ -146,8 +146,8 @@ export default function Trainer({ text, timeLimit, demo }: TrainerProps) {
           setIsActive={setIsActive}
         />
       </div>
-      <div className="flex justify-center md:justify-between mb-2 flex-wrap ">
-        <div className="flex gap-x-2 relative ">
+      <div className="flex justify-center md:justify-between mb-2 flex-wrap  ">
+        <div className="flex gap-x-2 relative  flex-wrap max-sm:gap-2 max-sm:justify-center">
           <DropFont />
           {!demo && <DropTheme />}
           <DropSound />

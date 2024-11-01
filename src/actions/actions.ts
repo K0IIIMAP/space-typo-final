@@ -3,49 +3,43 @@ import { signIn, signOut } from "@/lib/auth";
 
 import prisma from "@/lib/db";
 import { LogInSchema, SignUpSchema } from "@/lib/schemas";
-import { sleep } from "@/lib/utils";
 
 import bcrypt from "bcryptjs";
-import { AuthError } from "next-auth";
+
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
-export const createUser = async (prevState: unknown, data: FormData) => {
-  const dataObject = Object.fromEntries(data.entries());
-  const validatedUserData = SignUpSchema.safeParse(dataObject);
+export const createUser = async (data: FormData) => {
+  const formValues = {
+    email: data.get("email"),
+    password: data.get("password"),
+    confirmPassword: data.get("confirmPassword"),
+  };
 
-  if (!validatedUserData.success) {
-    console.log("invalid form data");
-    return {
-      message: "Invalid form data",
-    };
-  }
-
-  const hashedPassword = await bcrypt.hash(validatedUserData.data.password, 10);
-  await sleep(2000);
   try {
-    await prisma.user.create({
+    await SignUpSchema.parseAsync(formValues);
+
+    const hashedPassword = await bcrypt.hash(formValues.password, 10);
+
+    const user = await prisma.user.create({
       data: {
-        email: validatedUserData.data.email,
+        email: formValues.email,
         hashedPassword,
       },
     });
-  } catch {
-    return {
-      message: "Could not create user",
-    };
+
+    await signIn("credentials", formValues);
+  } catch (error) {
+    throw error; // NextAuth handles redirects by throwing an error, so we have to throw an error here to redirect the user to the login page if the user is already signed in.
   }
-
-  await signIn("credentials", validatedUserData.data);
 };
-
-export const logIn = async (prevState: unknown, formData: FormData) => {
+export const logIn = async (formData: FormData) => {
   if (!(formData instanceof FormData)) {
     return {
       message: "Invalid form data",
     };
   }
-  await sleep(2000);
+
   const authData = Object.fromEntries(formData.entries());
   const validatedAuthData = LogInSchema.safeParse(authData);
 
@@ -57,24 +51,11 @@ export const logIn = async (prevState: unknown, formData: FormData) => {
   try {
     await signIn("credentials", formData);
   } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin": {
-          return { message: "Invalid cretentials" };
-        }
-        default: {
-          return {
-            message: "Could not sign in",
-          };
-        }
-      }
-    }
     throw error; // next js redirects throws error, so we need to re throw it
   }
 };
 
 export const signOutUser = async () => {
-  await sleep(2000);
   await signOut({ redirectTo: "/" });
 };
 

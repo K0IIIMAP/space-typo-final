@@ -1,8 +1,16 @@
+"use client";
 import { logIn } from "@/actions/actions";
 import { cn } from "@/lib/utils";
-import React, { Dispatch, SetStateAction, useActionState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useActionState,
+  useState,
+} from "react";
 
 import AuthBtn from "./sign-up-btn";
+import { LogInSchema } from "@/lib/schemas";
+import { z } from "zod";
 type LogInFormProps = {
   loginIsActive: boolean;
   setLoginIsActive: Dispatch<SetStateAction<boolean>>;
@@ -11,7 +19,34 @@ export default function LogInForm({
   loginIsActive,
   setLoginIsActive,
 }: LogInFormProps) {
-  const [, formAction, isPending] = useActionState(logIn, null);
+  const [errors, setErrors] = useState({});
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = async (prevState: unknown, formData: FormData) => {
+    const formValues = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
+
+    try {
+      await LogInSchema.parseAsync(formValues);
+
+      await logIn(formData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors = error.flatten().fieldErrors;
+
+        setErrors(fieldErrors);
+      } else {
+        setErrors({ general: "Invalid credentials." });
+        location.reload();
+      }
+    }
+  };
+  const [, formAction, isPending] = useActionState(handleSubmit, {
+    error: "",
+    status: "initial",
+  });
   return (
     <div
       className={cn(
@@ -31,22 +66,27 @@ export default function LogInForm({
         <input
           type="email"
           name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full p-3 mb-4 border border-white/80 rounded-md bg-white/0 focus:outline-none focus:scale-[1.01] transition"
           placeholder="Email"
-          maxLength={40}
-          required
         />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         <input
           type="password"
           name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="w-full p-3 mb-6 border border-white/80 rounded-md bg-white/0 focus:outline-none focus:scale-[1.01] transition"
           placeholder="Password"
-          required
-          maxLength={25}
-          minLength={8}
         />
-
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password}</p>
+        )}
         <AuthBtn type="logIn" isPending={isPending}></AuthBtn>
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-2"> {errors.general}</p>
+        )}
       </form>
       <p className=" pt-20 pb-5 text-center">
         Don&apos;t have an account yet?{" "}

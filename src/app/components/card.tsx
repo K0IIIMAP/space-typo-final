@@ -63,7 +63,7 @@ export default function Card({
             Launch
           </Link>
 
-          <div className=" absolute left-0 bottom-0  translate-y-[100%] bg-white/10 opacity-90 p-2 text-left  duration-400 ease-in-out  group-hover:translate-y-0 duration-300">
+          <div className=" absolute left-0 bottom-0  translate-y-[100%]  opacity-90 p-2 text-left  duration-400 ease-in-out  group-hover:translate-y-0 duration-300">
             {item.description}
           </div>
         </div>

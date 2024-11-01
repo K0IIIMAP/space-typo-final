@@ -30,7 +30,7 @@ body {
 }
 
 .space {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
     /* 50% black overlay */
       url("/wallpapersden.com_amazing-outer-space-4k-galaxy_3072x2048.jpg"); /* Corrected image path */
   background-size: cover; /* Adjust as necessary */

@@ -1,18 +1,17 @@
 "use client";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 import { motion } from "framer-motion";
-import { useSessionContext } from "@/contexts/sess-context-providres";
+
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 export default function Navbar() {
-  interface CustomSession {
-    user?: { name?: string; email?: string }; // customize based on expected structure
-  }
-  const session = useSessionContext() as CustomSession | null;
-  const isAuthenticated = Boolean(session?.user);
+  const { data: session, status } = useSession();
+  const [navbarOpen, setNavbarOpen] = useState(false);
 
   const currentPath = usePathname();
   const routes = [
@@ -20,7 +19,7 @@ export default function Navbar() {
     { label: "Modes", path: "/modes", keyWord: "mode" },
     { label: "Challenges", path: "/challenges", keyWord: "challenge" },
   ];
-  if (isAuthenticated) {
+  if (session?.user) {
     routes.push({ label: "Account", path: "/account" });
   } else {
     routes.push({ label: "Log in", path: "/log-in" });
@@ -28,15 +27,15 @@ export default function Navbar() {
 
   return (
     <>
-      <Link href="/" className="text-2xl font-bold">
+      <Link href="/" className="text-2xl font-bold max-sm:mb-2">
         Space Typo
       </Link>
       <nav>
-        <ul className="flex gap-x-5 items-center">
+        <ul className="flex gap-x-5 items-center ">
           {routes.map(({ label, path, keyWord }) => (
             <li
               key={path}
-              className="text-white/50 hover:text-white/80 transition relative text-[14px]"
+              className="text-white/50 hover:text-white/80 transition relative text-[14px] "
             >
               <Link
                 href={path}
@@ -44,6 +43,16 @@ export default function Navbar() {
                   "text-white":
                     currentPath === path || currentPath.includes(keyWord!),
                 })}
+                onClick={() => {
+                  if (
+                    (path === "/modes" || path === "/challenges") &&
+                    !session?.user
+                  ) {
+                    toast.warning("Log in to access modes and challenges", {
+                      className: "bg-red-500 border-none text-white",
+                    });
+                  }
+                }}
               >
                 {label}
               </Link>

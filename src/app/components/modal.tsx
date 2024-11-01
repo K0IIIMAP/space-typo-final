@@ -51,8 +51,7 @@ export default function Modal({
         <div className=" bg-gray-800 rounded-lg shadow-lg p-6 w-96 max-w-full">
           {onMainPage ? (
             <h2 className="text-xl font-bold mb-4 text-center">
-              Congratulations! You have finished the demo, in order to start
-              with modes and challenges you have to create an account!{" "}
+              Congratulations! Let&apos;s create an account!{" "}
             </h2>
           ) : (
             <h2 className="text-xl font-bold mb-4 text-center">{message}</h2>

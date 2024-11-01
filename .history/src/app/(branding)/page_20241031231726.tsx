@@ -25,7 +25,7 @@ export default function Home() {
 
           <Link
             href="/log-in"
-            className="bg-accent/90 px-20 py-3 w-fit text-[16px] mt-3 mx-auto lg:mx-0 hover:bg-accent transition"
+            className="bg-accent/90 px-20 py-3 w-fit text-[16px] mt-3 mx-auto lg:mx-0"
           >
             Launch right now!
           </Link>

@@ -28,10 +28,10 @@ export default async function ChallengesPage() {
   const challenges = await prisma.challenge.findMany();
 
   return (
-    <main>
+    <main className="flex flex-col items-center">
       <AppH1>Test your skills with the hardest challenges ever!</AppH1>
 
-      <div className="flex flex-wrap justify-evenly px-[5%] mt-20 gap-6">
+      <div className="flex flex-wrap justify-evenly px-[5%] mt-20 gap-6 mb-10 ">
         {challenges.map((challenge: Challenge, index: number) => (
           <Card
             isLocked={index > 0 && challengesCompleted < index}

@@ -17,7 +17,7 @@ export default async function ModesPage() {
         Skills before trying challenges!
       </AppH1>
 
-      <div className="flex flex-wrap justify-evenly px-[5%] mt-20 gap-6">
+      <div className="flex flex-wrap justify-evenly px-[5%] mt-20 gap-6 mb-10">
         {modes.map((mode, index) => (
           <Card
             mode={mode}

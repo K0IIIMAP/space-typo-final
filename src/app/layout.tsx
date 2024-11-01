@@ -6,9 +6,10 @@ import { Poppins } from "next/font/google"; // Import the font
 
 import SettingsContextProvider from "@/contexts/settings-context-provider";
 import Header from "./components/header";
-import { SessionContextProvider } from "@/contexts/sess-context-providres";
-import { auth } from "@/lib/auth";
+
 import { Toaster } from "sonner";
+import Footer from "./components/footer";
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "Space Typo",
@@ -24,20 +25,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = auth();
   return (
     <html lang="en">
-      <body className={` ${poppins.className} antialiased space`}>
-        <SessionContextProvider session={session}>
-          <TabloidContextProvider>
-            <SettingsContextProvider>
+      <body
+        className={` ${poppins.className} antialiased space flex flex-col min-h-screen`}
+      >
+        <TabloidContextProvider>
+          <SettingsContextProvider>
+            <SessionProvider>
               <Header />
 
               {children}
-            </SettingsContextProvider>
-          </TabloidContextProvider>
-          <Toaster />
-        </SessionContextProvider>
+              <Footer />
+            </SessionProvider>
+          </SettingsContextProvider>
+        </TabloidContextProvider>
+        <Toaster />
       </body>
     </html>
   );

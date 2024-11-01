@@ -1,14 +1,14 @@
 "use client";
-import { createUser } from "@/actions/actions";
-import { SignUpSchema } from "@/lib/schemas";
+
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useActionState } from "react";
+
+import React, { useActionState, useState } from "react";
 import { Dispatch, SetStateAction } from "react";
 
-import { useForm } from "react-hook-form";
-
 import AuthBtn from "./sign-up-btn";
+import { SignUpSchema } from "@/lib/schemas";
+import { z } from "zod";
+import { createUser } from "@/actions/actions";
 
 type SignUpFormProps = {
   loginIsActive: boolean;
@@ -18,13 +18,34 @@ export default function SignUpForm({
   loginIsActive,
   setLoginIsActive,
 }: SignUpFormProps) {
-  const {
-    register,
+  const handleFormSubmit = async (prevState: unknown, formData: FormData) => {
+    try {
+      const formValues = {
+        email: formData.get("email"),
+        password: formData.get("password"),
+        confirmPassword: formData.get("confirmPassword"),
+      };
+      await SignUpSchema.parseAsync(formValues);
 
-    formState: { errors },
-  } = useForm({ resolver: zodResolver(SignUpSchema) });
+      await createUser(formData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors = error.flatten().fieldErrors;
 
-  const [, formAction, isPending] = useActionState(createUser, null);
+        setErrors(fieldErrors);
+      } else {
+        location.reload(); // to refresh
+      }
+    }
+  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [, formAction, isPending] = useActionState(handleFormSubmit, {
+    error: "",
+    status: "initial",
+  });
+  const [errors, setErrors] = useState({});
 
   return (
     <div
@@ -44,41 +65,42 @@ export default function SignUpForm({
       <form className="text-white/80" action={formAction}>
         <input
           type="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full p-3  border border-white/80 rounded-md bg-white/0 focus:outline-none focus:scale-[1.01] transition"
           placeholder="Email"
-          {...register("email")}
-          required
         />
-        {errors.email && (
-          <p className="text-red-500">{`${errors.email?.message}`}</p>
-        )}
+        {errors.email && <p className="text-red-500">{`${errors.email}`}</p>}
 
         <input
           type="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="w-full p-3 mt-4 border border-white/80 rounded-md bg-white/0 focus:outline-none focus:scale-[1.01] transition"
           placeholder="Password"
-          {...register("password")}
-          required
-          minLength={8}
-          maxLength={25}
         />
         {errors.password && (
-          <p className="text-red-500">{`${errors.password?.message}`}</p>
+          <p className="text-red-500">{`${errors.password}`}</p>
         )}
 
         <input
           type="password"
+          name="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           className="w-full p-3 mt-4 border border-white/80 rounded-md bg-white/0 focus:outline-none focus:scale-[1.01] transition"
           placeholder="Confirm Password"
-          {...register("confirmPassword")}
-          required
-          minLength={8}
         />
-        {errors.confirmPassword && ( // Corrected this line
-          <p className="text-red-500">{`${errors.confirmPassword?.message}`}</p>
+        {errors.confirmPassword && (
+          <p className="text-red-500">{`${errors.confirmPassword}`}</p>
         )}
 
         <AuthBtn type="signUp" isPending={isPending}></AuthBtn>
+        {errors.general && (
+          <p className="text-red-500">{`${errors.general}`}</p>
+        )}
       </form>
       <p className="pt-10 pb-3 text-center">
         Already have an account?{" "}
